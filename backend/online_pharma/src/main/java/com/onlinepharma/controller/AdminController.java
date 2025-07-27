@@ -1,0 +1,21 @@
+package com.onlinepharma.controller;
+
+import com.onlinepharma.dto.AdminLoginDTO;
+import com.onlinepharma.dto.LoginResponseDTO;
+import com.onlinepharma.service.AdminService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/admin")
+public class AdminController {
+
+    @Autowired
+    private AdminService adminService;
+
+    @PostMapping("/login")
+    public LoginResponseDTO login(@RequestBody AdminLoginDTO dto) {
+        return adminService.loginAdmin(dto);
+    }
+}

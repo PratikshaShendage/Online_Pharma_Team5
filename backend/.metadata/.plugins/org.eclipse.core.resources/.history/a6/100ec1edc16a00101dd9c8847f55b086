@@ -1,0 +1,5 @@
+package com.onlinepharma.dto;
+
+public class LoginResponseDTO {
+
+}

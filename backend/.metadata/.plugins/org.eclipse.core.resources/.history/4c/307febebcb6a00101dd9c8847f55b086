@@ -1,0 +1,36 @@
+package com.onlinepharma.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.onlinepharma.dto.AdminLoginDTO;
+import com.onlinepharma.dto.LoginResponseDTO;
+import com.onlinepharma.model.Admin;
+import com.onlinepharma.repository.AdminRepository;
+import com.onlinepharma.service.AdminService;
+
+import java.util.Optional;
+
+@Service
+public class AdminServiceImpl implements AdminService {
+
+    @Autowired
+    private AdminRepository adminRepository;
+
+    @Override
+    public LoginResponseDTO loginAdmin(AdminLoginDTO dto) {
+        Optional<Admin> optional = adminRepository.findByEmail(dto.getEmail());
+
+        if (optional.isEmpty()) {
+            return new LoginResponseDTO("Admin not found", false);
+        }
+
+        Admin admin = optional.get();
+
+        if (!admin.getPassword().equals(dto.getPassword())) {
+            return new LoginResponseDTO("Invalid credentials", false);
+        }
+
+        return new LoginResponseDTO("Login successful", true);
+    }
+}

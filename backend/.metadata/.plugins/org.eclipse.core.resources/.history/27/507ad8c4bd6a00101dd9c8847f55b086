@@ -1,0 +1,53 @@
+package com.onlinepharma.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.onlinepharma.dto.MemberRequestDTO;
+import com.onlinepharma.model.Member;
+import com.onlinepharma.service.MemberService;
+
+import jakarta.validation.Valid;
+
+    @RestController
+    @RequestMapping("/api/members")
+    public class MemberController {
+
+        @Autowired
+        private MemberService memberService;
+
+        @PostMapping("/register")
+        public Member registerMember(@RequestBody @Valid MemberRequestDTO dto) {
+            return memberService.registerMember(dto);
+        }
+    
+    //
+    @PutMapping("/approve/{id}")
+    public String approveMember(@PathVariable int id) {
+        boolean approved = memberService.approveMember(id);
+        if (approved) {
+            return "Member approved successfully";
+        } else {
+            return "Member not found";
+        }
+    }
+  
+    // this below code for registration password validation 
+    private boolean isValidPassword(String password) {
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$";
+        return password != null && password.matches(regex);
+    }
+
+    
+    
+
+
+}
+
+
+

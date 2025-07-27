@@ -1,0 +1,26 @@
+package com.onlinepharma.service.impl;
+
+import com.onlinepharma.dto.MemberRequestDTO;
+import com.onlinepharma.model.Member;
+import com.onlinepharma.repository.MemberRepository;
+import com.onlinepharma.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class MemberServiceImpl implements MemberService {
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Override
+    public Member registerMember(MemberRequestDTO dto) {
+        Member member = new Member();
+        member.setFullName(dto.getFullName());
+        member.setEmail(dto.getEmail());
+        member.setPassword(dto.getPassword()); // Encrypt in real app
+        member.setMobile(dto.getMobile());
+        member.setAddress(dto.getAddress());
+        return memberRepository.save(member);
+    }
+}

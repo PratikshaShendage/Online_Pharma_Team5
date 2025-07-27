@@ -1,0 +1,5 @@
+package com.onlinepharma.repository;
+
+public class AdminRepository {
+
+}

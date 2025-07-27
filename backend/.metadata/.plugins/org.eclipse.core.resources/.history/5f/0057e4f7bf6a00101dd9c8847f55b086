@@ -1,0 +1,73 @@
+package com.onlinepharma.service.impl;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.onlinepharma.dto.MemberRequestDTO;
+import com.onlinepharma.model.Member;
+import com.onlinepharma.repository.MemberRepository;
+import com.onlinepharma.service.MemberService;
+
+@Service
+public class MemberServiceImpl implements MemberService {
+
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    MemberServiceImpl(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public Member registerMember(MemberRequestDTO dto) {
+    	
+    	
+
+        // ✅ Check if password is strong
+        if (!isValidPassword(dto.getPassword())) {
+            throw new IllegalArgumentException("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
+        }
+        
+        // ✅ Create a new Member object and set all values
+        Member member = new Member();
+        member.setName(dto.getName());
+        member.setDob(dto.getDob());
+        member.setEmail(dto.getEmail());
+        member.setMobile(dto.getMobile());
+        member.setAddress(dto.getAddress());
+        
+        
+        // ✅ Encrypt the password and set
+        member.setPassword(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(dto.getPassword()));
+
+        
+        
+        
+        member.setDisabled(false); // default
+        return memberRepository.save(member);
+    }
+    
+    @Override
+    public boolean approveMember(int id) {
+        Optional<Member> optional = memberRepository.findById(id);
+        if (optional.isPresent()) {
+            Member member = optional.get();
+            member.setDisabled(false); // approve the member
+            memberRepository.save(member);
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean isValidPassword(String password) {
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$";
+        return password != null && password.matches(regex);
+    }
+
+
+}

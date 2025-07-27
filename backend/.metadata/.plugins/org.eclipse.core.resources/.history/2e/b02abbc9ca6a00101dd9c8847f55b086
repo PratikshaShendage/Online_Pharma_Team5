@@ -1,0 +1,5 @@
+package com.onlinepharma.service;
+
+public class AdminService {
+
+}
