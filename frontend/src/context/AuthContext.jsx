@@ -12,7 +12,8 @@ export const AuthProvider = ({ children }) => {
 
   const loginAdmin = async (email, password) => {
     try {
-      const res = await axios.post("/admin/login", { email, password });
+      // Backend admin login endpoint: POST /api/admin/login
+      const res = await axios.post("/api/admin/login", { email, password });
       if (res.data.success) {
         const userInfo = { role: "ADMIN", email };
         setUser(userInfo);
@@ -26,7 +27,8 @@ export const AuthProvider = ({ children }) => {
 
   const loginMember = async (email, password) => {
     try {
-      const res = await axios.post("/user/login", { email, password });
+      // Backend member login endpoint: POST /api/members/login
+      const res = await axios.post("/api/members/login", { email, password });
       if (res.data.success) {
         const userInfo = { role: "MEMBER", email };
         setUser(userInfo);
@@ -40,7 +42,8 @@ export const AuthProvider = ({ children }) => {
 
   const registerMember = async (formData) => {
     try {
-      const res = await axios.post("/user/register", formData);
+      // Backend member register endpoint: POST /api/members/register
+      const res = await axios.post("/api/members/register", formData);
       return { success: true, message: "Registered successfully" };
     } catch (err) {
       return { success: false, message: err.response?.data?.message || "Registration failed" };
