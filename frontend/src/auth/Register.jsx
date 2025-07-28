@@ -23,7 +23,7 @@ const Register = () => {
     e.preventDefault();
     const result = await registerMember(form);
     if (result.success) {
-      navigate("/login");
+      navigate("/user/login");
     } else {
       setError(result.message);
     }

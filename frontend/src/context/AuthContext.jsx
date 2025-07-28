@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx
 import { createContext, useContext, useState } from "react";
 import axios from "../api/axiosConfig";
 
@@ -12,8 +11,14 @@ export const AuthProvider = ({ children }) => {
 
   const loginAdmin = async (email, password) => {
     try {
-      // Backend admin login endpoint: POST /api/admin/login
-      const res = await axios.post("/api/admin/login", { email, password });
+      const token = btoa(`${email}:${password}`);
+      const res = await axios.post(
+        "/api/admin/login",
+        null,
+        {
+          headers: { Authorization: `Basic ${token}` },
+        }
+      );
       if (res.data.success) {
         const userInfo = { role: "ADMIN", email };
         setUser(userInfo);
@@ -21,14 +26,23 @@ export const AuthProvider = ({ children }) => {
       }
       return res.data;
     } catch (err) {
-      return { success: false, message: err.response?.data?.message || "Admin login failed" };
+      return {
+        success: false,
+        message: err.response?.data?.message || "Admin login failed",
+      };
     }
   };
 
   const loginMember = async (email, password) => {
     try {
-      // Backend member login endpoint: POST /api/members/login
-      const res = await axios.post("/api/members/login", { email, password });
+      const token = btoa(`${email}:${password}`);
+      const res = await axios.post(
+        "/api/members/login",
+        null,
+        {
+          headers: { Authorization: `Basic ${token}` },
+        }
+      );
       if (res.data.success) {
         const userInfo = { role: "MEMBER", email };
         setUser(userInfo);
@@ -36,17 +50,23 @@ export const AuthProvider = ({ children }) => {
       }
       return res.data;
     } catch (err) {
-      return { success: false, message: err.response?.data?.message || "Member login failed" };
+      return {
+        success: false,
+        message: err.response?.data?.message || "Member login failed",
+      };
     }
   };
 
   const registerMember = async (formData) => {
     try {
-      // Backend member register endpoint: POST /api/members/register
+      // No auth headers sent here
       const res = await axios.post("/api/members/register", formData);
       return { success: true, message: "Registered successfully" };
     } catch (err) {
-      return { success: false, message: err.response?.data?.message || "Registration failed" };
+      return {
+        success: false,
+        message: err.response?.data?.message || "Registration failed",
+      };
     }
   };
 
